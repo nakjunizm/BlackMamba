@@ -1,11 +1,13 @@
 import { Component, ViewChild, OnInit} from '@angular/core';
+import { HttpService } from './http-service.component';
 
 // webpack html imports
 let template = require('./bar-chart-top10.html');
 
 @Component({
     selector: 'top10-chart',
-    template: template
+    template: template,
+    providers: [ HttpService ]
 })
 export class BarChartTop10Component implements OnInit {
 
@@ -14,6 +16,11 @@ export class BarChartTop10Component implements OnInit {
     chartHeight:string = "612px";
     el:any;
     flag:boolean = true;
+
+    getdocs_buttonName:string = 'getDocs'
+    docs:string;
+
+    constructor(private _httpService:HttpService){}
 
     @ViewChild("myChart") myChart;
 
@@ -46,5 +53,13 @@ export class BarChartTop10Component implements OnInit {
             this.buttonName = "reduction";
             this.flag = true;
         }
+    }
+
+    public getdocs():void {
+        this._httpService.getDocsRestful().subscribe(
+          data => this.docs = JSON.stringify(data),
+          error => console.log("ERROR HTTP GET Service"),
+          () => console.log("Job Done Get !")
+        );
     }
 }

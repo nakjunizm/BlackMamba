@@ -1,8 +1,10 @@
 import falcon
+from falcon_cors import CORS
 import data
 from wsgiref import simple_server
 
-api = application = falcon.API()
+cors = CORS(allow_all_origins=True)
+api = application = falcon.API(middleware=[cors.middleware])
 
 es_client = data.ESController("localhost:9200").es_client
 print (type(es_client))
