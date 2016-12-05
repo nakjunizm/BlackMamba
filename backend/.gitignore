@@ -1,0 +1,5 @@
+# For python 3 venv
+/bin
+/lib
+pyvenv.cfg
+pip-selfcheck.json
