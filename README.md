@@ -2,7 +2,7 @@
 
 ## ElasticSearch template
 - Create index with the template below
-'''
+```
 {
   "accesslog": {
     "order": 0,
@@ -78,6 +78,6 @@
     }
   }
 }
-'''
+```
 
 
