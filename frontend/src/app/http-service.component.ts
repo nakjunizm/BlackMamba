@@ -9,7 +9,7 @@ export class HttpService {
   constructor(private _http: Http){}
 
   getDocsRestful(){
-    let _top10Url:string = 'http://localhost:8000/data';
+    let _top10Url:string = 'http://localhost:8000/top10';
     return this._http.get(_top10Url)
                     .map(res => res.json())
                     .catch(this.handleError);

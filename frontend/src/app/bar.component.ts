@@ -4,6 +4,11 @@ import { HttpService } from './http-service.component';
 // webpack html imports
 let template = require('./bar-chart-top10.html');
 
+interface top10Obj {
+    doc_count:number;
+    key:string;
+}
+
 @Component({
     selector: 'top10-chart',
     template: template,
@@ -18,7 +23,8 @@ export class BarChartTop10Component implements OnInit {
     flag:boolean = true;
 
     getdocs_buttonName:string = 'getDocs'
-    docs:string;
+    //docs:top10Obj;
+    docs:string
 
     constructor(private _httpService:HttpService){}
 
@@ -58,6 +64,7 @@ export class BarChartTop10Component implements OnInit {
     public getdocs():void {
         this._httpService.getDocsRestful().subscribe(
           data => this.docs = JSON.stringify(data),
+          //data => this.docs.key,
           error => console.log("ERROR HTTP GET Service"),
           () => console.log("Job Done Get !")
         );
