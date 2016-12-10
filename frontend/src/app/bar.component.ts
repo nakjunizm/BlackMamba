@@ -36,7 +36,8 @@ export class BarChartTop10Component implements OnInit {
 
     public barChartOptions:any = {
         scaleShowVerticalLines: false,
-        responsive: true
+        responsive: true,
+        animation: false
     };
     public barChartLabels:string[] = ['urlA', 'urlB', 'urlC', 'urlD',
         'urlE', 'urlF', 'urlG', 'urlH', 'urlI', 'urlJ'];
@@ -67,19 +68,20 @@ export class BarChartTop10Component implements OnInit {
           error => console.log("ERROR HTTP GET Service"),
           () => console.log("Job Done Get !")
         );
-        this._httpService.getDocsRestful().subscribe(
-            data => this.data = data,
+        this._httpService.getDocsRestfulRepeat().subscribe(
+            data => this.convertLabelAndData(data),
             error => console.log("ERROR HTTP GET Service"),
-            () => this.convertLabelAndData()
+            //() => this.convertLabelAndData()
+            () => console.log("Job Done Get repeat!")
         );
-        
+
     }
 
-    private convertLabelAndData():void {
+    private convertLabelAndData(data:any):void {
         let newLabel:Array<string> = new Array(10);
         let newData:Array<any> = new Array(1);
         newData[0] = {data: new Array(10)};
-        let buckets:any[] = this.data.aggregations.group_by_request_uri.buckets;
+        let buckets:any[] = data.aggregations.group_by_request_uri.buckets;
         let i = 0
         buckets.forEach(function(item){
             newLabel[i] = item.key;
