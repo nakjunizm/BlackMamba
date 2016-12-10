@@ -79,5 +79,47 @@
   }
 }
 ```
+- Request's staticstics template
+```
+{
+  "requeststatistics": {
+    "order": 0,
+    "template": "requeststatistics*",
+    "settings": {
+      "index": {
+        "number_of_shards": "5",
+        "number_of_replicas": "0"
+      }
+    },
+    "mappings": {
+      "response_time_average": {
+        "properties": {
+          "request_uri": {
+            "index": "not_analyzed",
+            "type": "string"
+          },
+          "request_method": {
+            "type": "string"
+          },
+          "protocol": {
+            "type": "string"
+          },
+          "average_time": {
+            "type": "date"
+          },
+          "reference_time": {
+            "type": "date"
+          },
+          "period": {
+            "type": "long"
+          }
+        }
+      }
+    },
+    "aliases": {
 
+    }
+  }
+}
+```
 
