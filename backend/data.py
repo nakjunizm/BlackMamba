@@ -55,7 +55,7 @@ if __name__ == '__main__':
     data = {'index':'accesslog', 'doc_type':'HTTP'}
     # es_client = ESController("localhost:9200")
     es = ESController("localhost:9200")
-    print(json.dumps(es.search(data), indent = 2))
+    # print(json.dumps(es.search(data), indent = 2))
     # es_client.search(data)
     # es_client = elasticsearch.Elasticsearch("localhost:9200")
     # docs = es_client.search(index = data['index'],
