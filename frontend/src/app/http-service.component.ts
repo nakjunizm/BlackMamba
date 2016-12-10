@@ -15,6 +15,15 @@ export class HttpService {
                     .catch(this.handleError);
   }
 
+  getDocsRestfulRepeat(){
+    console.log('in');
+    let _top10Url:string = 'http://localhost:8000/top10';
+    return Observable.interval(500)
+                    .switchMap(() => this._http.get(_top10Url)
+                    .map(res => res.json()))
+                    .catch(this.handleError);
+  }
+
   private handleError (error: Response) {
     console.error(error)
     return Observable.throw(error.json() || 'error')
