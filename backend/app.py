@@ -8,7 +8,7 @@ api = application = falcon.API(middleware=[cors.middleware])
 
 es_client = data.ESController("localhost:9200").es_client
 docs = data.SearchDocs(es_client, {'index':'accesslog', 'doc_type':'HTTP', 'body':''})
-_query = {'index':'accesslog',
+_top10Query = {'index':'accesslog',
           'doc_type':'HTTP',
           'body': {
                     'size': 0,
@@ -22,10 +22,24 @@ _query = {'index':'accesslog',
                     }
             }
 
-top10 = data.SearchDocs(es_client, _query)
+top10 = data.SearchDocs(es_client, _top10Query)
 
-# api.add_route('/images', image_collection)
-# api.add_route('/images/{name}', image)
+_top10Query = {'index':'accesslog',
+          'doc_type':'HTTP',
+          'body': {
+                    'size': 0,
+                    'aggs': {
+                                'avg_response_time': {
+                                        'field': 'request_uri'
+                                 }
+                            }
+                    }
+            }
+
+_avgResTimeQuery = {''}          
+avgResTime = data.SearchDocs(es_client, _avgResTimeQuery)
+
+
 api.add_route('/data',docs)
 api.add_route('/top10',top10)
 
