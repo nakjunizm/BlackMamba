@@ -105,7 +105,7 @@
             "type": "string"
           },
           "average_time": {
-            "type": "date"
+            "type": "long"
           },
           "reference_time": {
             "type": "date"
