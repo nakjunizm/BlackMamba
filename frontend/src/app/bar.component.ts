@@ -1,11 +1,18 @@
 import { Component, ViewChild, OnInit} from '@angular/core';
+import { HttpService } from './http-service.component';
 
 // webpack html imports
 let template = require('./bar-chart-top10.html');
 
+interface top10Obj {
+    doc_count:number;
+    key:string;
+}
+
 @Component({
     selector: 'top10-chart',
-    template: template
+    template: template,
+    providers: [ HttpService ]
 })
 export class BarChartTop10Component implements OnInit {
 
@@ -15,6 +22,12 @@ export class BarChartTop10Component implements OnInit {
     el:any;
     flag:boolean = true;
 
+    getdocs_buttonName:string = 'getDocs'
+    docs:string;
+    data:any;
+
+    constructor(private _httpService:HttpService){}
+
     @ViewChild("myChart") myChart;
 
     ngOnInit() {
@@ -23,7 +36,8 @@ export class BarChartTop10Component implements OnInit {
 
     public barChartOptions:any = {
         scaleShowVerticalLines: false,
-        responsive: true
+        responsive: true,
+        animation: false
     };
     public barChartLabels:string[] = ['urlA', 'urlB', 'urlC', 'urlD',
         'urlE', 'urlF', 'urlG', 'urlH', 'urlI', 'urlJ'];
@@ -46,5 +60,35 @@ export class BarChartTop10Component implements OnInit {
             this.buttonName = "reduction";
             this.flag = true;
         }
+    }
+
+    public getdocs():void {
+        this._httpService.getDocsRestful().subscribe(
+          data => this.docs = JSON.stringify(data),
+          error => console.log("ERROR HTTP GET Service"),
+          () => console.log("Job Done Get !")
+        );
+        this._httpService.getDocsRestfulRepeat().subscribe(
+            data => this.convertLabelAndData(data),
+            error => console.log("ERROR HTTP GET Service"),
+            //() => this.convertLabelAndData()
+            () => console.log("Job Done Get repeat!")
+        );
+
+    }
+
+    private convertLabelAndData(data:any):void {
+        let newLabel:Array<string> = new Array(10);
+        let newData:Array<any> = new Array(1);
+        newData[0] = {data: new Array(10)};
+        let buckets:any[] = data.aggregations.group_by_request_uri.buckets;
+        let i = 0
+        buckets.forEach(function(item){
+            newLabel[i] = item.key;
+            newData[0].data[i] = item.doc_count;
+            i++;
+        });
+        this.barChartLabels = newLabel;
+        this.barChartData = newData;
     }
 }
