@@ -1,7 +1,7 @@
 # BlackMamba
 
 ## ElasticSearch template
-- Create index with the template below
+### Create index with the template below
 ```
 {
   "order": 0,
@@ -13,7 +13,7 @@
     }
   },
   "mappings": {
-    "HTTP": {
+    "http": {
       "properties": {
         "server_name": {
           "type": "string"
@@ -43,7 +43,7 @@
         }
       }
     },
-    "HTTPS": {
+    "https": {
       "properties": {
         "server_name": {
           "type": "string"
@@ -77,46 +77,125 @@
   "aliases": {}
 }
 ```
-- Request's staticstics template
+### Request's response_average template
 ```
 {
-  "requeststatistics": {
-    "order": 0,
-    "template": "requeststatistics*",
-    "settings": {
-      "index": {
-        "number_of_shards": "5",
-        "number_of_replicas": "0"
-      }
-    },
-    "mappings": {
-      "response_time_average": {
-        "properties": {
-          "request_uri": {
-            "index": "not_analyzed",
-            "type": "string"
-          },
-          "request_method": {
-            "type": "string"
-          },
-          "protocol": {
-            "type": "string"
-          },
-          "average_time": {
-            "type": "long"
-          },
-          "reference_time": {
-            "type": "date"
-          },
-          "period": {
-            "type": "long"
-          }
+  "order": 0,
+  "template": "response_average*",
+  "settings": {
+    "index": {
+      "number_of_shards": "5",
+      "number_of_replicas": "0"
+    }
+  },
+  "mappings": {
+    "http": {
+      "properties": {
+        "request_uri": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "request_method": {
+          "type": "string"
+        },
+        "average_time": {
+          "type": "long"
+        },
+        "reference_time": {
+          "type": "date"
+        },
+        "period": {
+          "type": "long"
         }
       }
     },
-    "aliases": {
-
+    "https": {
+      "properties": {
+        "request_uri": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "request_method": {
+          "type": "string"
+        },
+        "average_time": {
+          "type": "long"
+        },
+        "reference_time": {
+          "type": "date"
+        },
+        "period": {
+          "type": "long"
+        }
+      }
     }
+  },
+  "aliases": {
+
+  }
+}
+```
+### Event template
+```
+{
+  "order": 0,
+  "template": "event*",
+  "settings": {
+    "index": {
+      "number_of_shards": "5",
+      "number_of_replicas": "0"
+    }
+  },
+  "mappings": {
+    "http": {
+      "properties": {
+        "accesslog_id": {
+          "type": "string"
+        },
+        "request_uri": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "request_method": {
+          "type": "string"
+        },
+        "response_time": {
+          "type": "long"
+        },
+        "response_code": {
+          "type": "string"
+        }
+        "is_checked": {
+          "type": "boolean"
+        }
+      }
+    },
+    "https": {
+      "properties": {
+        "accesslog_id": {
+          "type": "string"
+        },
+        "request_uri": {
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "request_method": {
+          "type": "string"
+        },
+        "response_time": {
+          "type": "long"
+        },
+        "response_code": {
+          "type": "string"
+        }
+        "is_checked": {
+          "type": "boolean"
+        }
+      }
+    }
+  },
+  "aliases": {
+
   }
 }
 ```
