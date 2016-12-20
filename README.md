@@ -101,11 +101,14 @@
         "average_time": {
           "type": "long"
         },
-        "reference_time": {
+        "reference_time_from": {
           "type": "date"
         },
-        "period": {
-          "type": "long"
+        "reference_time_to": {
+          "type": "date"
+        },
+        "created_time": {
+          "type": "date"
         }
       }
     },
@@ -121,11 +124,14 @@
         "average_time": {
           "type": "long"
         },
-        "reference_time": {
+        "reference_time_from": {
           "type": "date"
         },
-        "period": {
-          "type": "long"
+        "reference_time_to": {
+          "type": "date"
+        },
+        "created_time": {
+          "type": "date"
         }
       }
     }
@@ -164,7 +170,7 @@
         },
         "response_code": {
           "type": "string"
-        }
+        },
         "is_checked": {
           "type": "boolean"
         }
@@ -187,7 +193,7 @@
         },
         "response_code": {
           "type": "string"
-        }
+        },
         "is_checked": {
           "type": "boolean"
         }
