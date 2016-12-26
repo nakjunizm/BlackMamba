@@ -24,6 +24,20 @@ class SearchDocs:
         resp.body = json.dumps(docs, indent = 2)
         resp.status = falcon.HTTP_200
 
+# class GetAvgResTime:
+#
+#     def __init__(self, es_client, data):
+#         self.es_client = es_client
+#         self.data = data
+#
+#     def on_get(self, req, resp):
+#         self.data['body']['query']['request_time']['lt'] = req.get_param('')
+#         docs = self.es_client.search(index = self.data['index'],
+#                                 doc_type = self.data['doc_type'],
+#                                 body = self.data['body']
+#                                 )
+#         resp.body = json.dumps(docs, indent = 2)
+#         resp.status = falcon.HTTP_200
 
 
 if __name__ == '__main__':

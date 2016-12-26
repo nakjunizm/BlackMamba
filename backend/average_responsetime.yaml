@@ -1,0 +1,4 @@
+http:
+  extra_time: 1000
+  /wp-admin: 3000
+  /app/main/posts: 5000
