@@ -39,6 +39,20 @@ export class HttpService {
                     .catch(this.handleError)
   }
 
+  getEvents(){
+    let _top10Url:string = 'http://localhost:8000/avg-res-time';
+    return this._http.get(_top10Url)
+                    .map(res => res.json())
+                    .catch(this.handleError);
+  }
+
+  getAvgResTime(){
+    let _avgResTimeUrl:string = 'http://localhost:8000/avg-res-time';
+    return this._http.get(_avgResTimeUrl)
+                    .map(res => res.json())
+                    .catch(this.handleError);
+  }
+
   private handleError (error: Response) {
     console.error(error)
     return Observable.throw(error.json() || 'error')

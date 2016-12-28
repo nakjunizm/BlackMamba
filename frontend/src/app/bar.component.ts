@@ -1,9 +1,6 @@
 import { Component, ViewChild, OnInit} from '@angular/core';
 import { HttpService } from './http-service.component';
 
-// webpack html imports
-let template = require('./bar-chart-top10.html');
-
 interface top10Obj {
     doc_count:number;
     key:string;
@@ -11,7 +8,7 @@ interface top10Obj {
 
 @Component({
     selector: 'top10-chart',
-    template: template,
+    templateUrl: './bar-chart-top10.html',
     providers: [ HttpService ]
 })
 export class BarChartTop10Component implements OnInit {
@@ -90,7 +87,7 @@ export class BarChartTop10Component implements OnInit {
         let newLabel:Array<string> = new Array(10);
         let newData:Array<any> = new Array(1);
         newData[0] = {data: new Array(10)};
-        let buckets:any[] = data.aggregations.group_by_request_uri.buckets;
+        let buckets:any[] = data.aggregations.avg_response_time.buckets;
         let i = 0
         buckets.forEach(function(item){
             newLabel[i] = item.key;

@@ -1,0 +1,6 @@
+<div>
+    <p-calendar [(ngModel)]="date111" [showIcon]="true"></p-calendar>
+    <p>Selected date: {{ date111 }}</p>
+    <p-listbox [options]="events" [(ngModel)]="selectedEvent" multiple="multiple" checkbox="checkbox" filter="filter"></p-listbox>
+    <p>Selected Event: {{ selectedEvent }}</p>
+</div>

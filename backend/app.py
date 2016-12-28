@@ -9,25 +9,25 @@ api = application = falcon.API(middleware=[cors.middleware])
 
 es_client = data.ESController("localhost:9200").es_client
 docs = data.SearchDocs(es_client, {'index':'accesslog', 'doc_type':'http', 'body':''})
-_top10Query = {'index':'accesslog','doc_type':'http',
-          'body': {
-                    'size': 0,
-                    'aggs': {
-                                'group_by_request_uri': {
-                                        'terms': {
-                                            'field': 'request_uri'
-                                        }
-                                 }
-                            }
-                    }
-            }
+# _top10Query = {'index':'accesslog','doc_type':'http',
+#           'body': {
+#                     'size': 0,
+#                     'aggs': {
+#                                 'group_by_request_uri': {
+#                                         'terms': {
+#                                             'field': 'request_uri'
+#                                         }
+#                                  }
+#                             }
+#                     }
+#             }
 _top10Query = {'index':'accesslog',
-    'doc_type':'HTTP',
+    'doc_type':'http',
     'body': {
         'size': 0,
         'aggs': {
             'avg_response_time': {
-                'field': 'request_uri'
+                'terms': { 'field': 'request_uri' }
             }
         }
     }
@@ -36,7 +36,7 @@ top10 = data.SearchDocs(es_client, _top10Query)
 
 _avgResTimeQuery = {
     "index": "accesslog",
-    "doc_type":"HTTP",
+    "doc_type":"http",
     "body": {
         "size": 0,
         "aggs": {
