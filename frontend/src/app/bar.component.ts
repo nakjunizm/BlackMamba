@@ -22,7 +22,8 @@ export class BarChartTop10Component implements OnInit {
     el:any;
     flag:boolean = true;
 
-    getdocs_buttonName:string = 'getDocs'
+    getdocs_buttonName:string = 'getDocs';
+    postAvgBtn:string = 'Response_AVG';
     docs:string;
     data:any;
 
@@ -75,6 +76,14 @@ export class BarChartTop10Component implements OnInit {
             () => console.log("Job Done Get repeat!")
         );
 
+    }
+
+    public postAvg():void {
+        let _fromDate:string = "2016-12-01";
+        let _toDate:string = "2016-12-11";
+        this._httpService.postResAvg(_fromDate, _toDate).subscribe(
+            () => console.log("postAvg Job Done")
+        );
     }
 
     private convertLabelAndData(data:any):void {
