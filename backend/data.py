@@ -2,9 +2,10 @@ import elasticsearch
 from elasticsearch import helpers
 import json
 import mimetypes
-from datetime import *
+from datetime import datetime, date
 
 import falcon
+import yaml
 
 class ESController:
 
@@ -19,32 +20,17 @@ class SearchDocs:
         self.data = data
 
     def on_get(self, req, resp):
-        docs = self.es_client.search(index=self.data['index'],
-        doc_type=self.data['doc_type'],
-        body=self.data['body']
-        )
+        docs = self.es_client.search(index = self.data['index'],
+                                doc_type = self.data['doc_type'],
+                                body = self.data['body']
+                                )
         resp.body = json.dumps(docs, indent = 2)
         resp.status = falcon.HTTP_200
-
-# class GetAvgResTime:
-#
-#     def __init__(self, es_client, data):
-#         self.es_client = es_client
-#         self.data = data
-#
-#     def on_get(self, req, resp):
-#         self.data['body']['query']['request_time']['lt'] = req.get_param('')
-#         docs = self.es_client.search(index = self.data['index'],
-#                                 doc_type = self.data['doc_type'],
-#                                 body = self.data['body']
-#                                 )
-#         resp.body = json.dumps(docs, indent = 2)
-#         resp.status = falcon.HTTP_200
 
     def on_post(self, req, resp):
         query = { "range" : {
             "request_time" : {
-                "gte": date.today().isoformat(), 
+                "gte": date.today().isoformat(),
                 "lte": "",
                 "format": "date"
              }
@@ -66,8 +52,8 @@ class SearchDocs:
             doc_type=self.data["doc_type"], body=self.data["body"]
         )
 
-        # print(json.dumps(self.data["body"], indent=2))
-        # print(json.dumps(docs, indent=2))
+        print(json.dumps(self.data["body"], indent=2))
+        print(json.dumps(docs, indent=2))
 
         input_data = []
         created_time = str(datetime.today().timestamp()).split(".")[0]
@@ -86,12 +72,37 @@ class SearchDocs:
                         "created_time": created_time
                     }
                 })
-        
+
         elasticsearch.helpers.bulk(self.es_client, input_data)
 
         resp.body = "{}"
         resp.status = falcon.HTTP_200
 
+class GetAvgResTime:
+
+    def __init__(self, es_client, data):
+        self.es_client = es_client
+        self.data = data
+
+    def on_get(self, req, resp):
+
+        docs = self.es_client.search(index = self.data['index'],
+                                doc_type = self.data['doc_type'],
+                                body = self.data['body']
+                                )
+        print (docs)
+        # data = dict(
+        #     docs[''] = 'a',
+        #     B = dict(
+        #         C = 'c',
+        #         D = 'd',
+        #         E = 'e',
+        #     )
+        # )
+        # with open('data.yml', 'w') as outfile:
+        #     yaml.dump(data, outfile, default_flow_style=True)
+        # resp.body = json.dumps(docs, indent = 2)
+        # resp.status = falcon.HTTP_200
 
 if __name__ == '__main__':
     data = {'index':'accesslog', 'doc_type':'HTTP'}
