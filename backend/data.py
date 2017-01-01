@@ -48,32 +48,33 @@ class SearchDocs:
 
         self.data["body"]["query"] = query
 
-        docs = self.es_client.search(index=self.data["index"],
-            doc_type=self.data["doc_type"], body=self.data["body"]
-        )
+        for doc_type in ["http", "https"]:
+            docs = self.es_client.search(index=self.data["index"],
+                doc_type=doc_type, body=self.data["body"]
+            )
 
-        print(json.dumps(self.data["body"], indent=2))
-        print(json.dumps(docs, indent=2))
+            print(json.dumps(self.data["body"], indent=2))
+            print(json.dumps(docs, indent=2))
 
-        input_data = []
-        created_time = str(datetime.today().timestamp()).split(".")[0]
-        for uri in docs["aggregations"]["group_by_request_uri"]["buckets"]:
-            print(uri["key"])
-            for method in uri["by_request_method"]["buckets"]:
-                input_data.append({
-                    "_index": "response_average",
-                    "_type": self.data["doc_type"],
-                    "_source": {
-                        "request_uri": uri["key"],
-                        "request_method": method["key"],
-                        "average_time": method["response_time_avg"]["value"],
-                        "reference_time_from": reference_date_from.isoformat(),
-                        "reference_time_to": reference_date_to.isoformat(),
-                        "created_time": created_time
-                    }
-                })
+            input_data = []
+            created_time = str(datetime.today().timestamp()).split(".")[0]
+            for uri in docs["aggregations"]["group_by_request_uri"]["buckets"]:
+                print(uri["key"])
+                for method in uri["by_request_method"]["buckets"]:
+                    input_data.append({
+                        "_index": "response_average",
+                        "_type": doc_type,
+                        "_source": {
+                            "request_uri": uri["key"],
+                            "request_method": method["key"],
+                            "average_time": method["response_time_avg"]["value"],
+                            "reference_time_from": reference_date_from.isoformat(),
+                            "reference_time_to": reference_date_to.isoformat(),
+                            "created_time": created_time
+                        }
+                    })
 
-        elasticsearch.helpers.bulk(self.es_client, input_data)
+            elasticsearch.helpers.bulk(self.es_client, input_data)
 
         resp.body = "{}"
         resp.status = falcon.HTTP_200
