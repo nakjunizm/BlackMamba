@@ -1,4 +1,16 @@
 http:
-  extra_time: 1000
-  /wp-admin: 3000
-  /app/main/posts: 5000
+  /wp-admin:
+    GET:
+      res_time: 3000
+      extra_time: 1000
+    POST:
+      res_time: 3000
+      extra_time: 1000
+
+  /app/main/posts:
+    GET:
+      res_time: 3000
+      extra_time: 1000
+    POST:
+      res_time: 3000
+      extra_time: 1000

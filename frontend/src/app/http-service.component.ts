@@ -46,8 +46,8 @@ export class HttpService {
                     .catch(this.handleError);
   }
 
-  getAvgResTime(){
-    let _avgResTimeUrl:string = 'http://localhost:8000/avg-res-time';
+  updateCollector(){
+    let _avgResTimeUrl:string = 'http://localhost:8000/avg-res-time/updateCollector';
     return this._http.get(_avgResTimeUrl)
                     .map(res => res.json())
                     .catch(this.handleError);

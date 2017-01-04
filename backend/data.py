@@ -3,6 +3,8 @@ from elasticsearch import helpers
 import json
 import mimetypes
 from datetime import datetime, date
+from collections import defaultdict
+import math
 
 import falcon
 import yaml
@@ -80,29 +82,43 @@ class SearchDocs:
 
 class GetAvgResTime:
 
-    def __init__(self, es_client, data):
+    def __init__(self, es_client, query, doc_type):
         self.es_client = es_client
-        self.data = data
+        self.query1 = query[0]
+        self.query2 = query[1]
+        self.doc_type = doc_type
 
     def on_get(self, req, resp):
 
-        docs = self.es_client.search(index = self.data['index'],
-                                doc_type = self.data['doc_type'],
-                                body = self.data['body']
+        created_time = self.es_client.search(index = self.query1['index'],
+                                doc_type = self.doc_type,
+                                body = self.query1['body']
                                 )
-        print (docs)
-        # data = dict(
-        #     docs[''] = 'a',
-        #     B = dict(
-        #         C = 'c',
-        #         D = 'd',
-        #         E = 'e',
-        #     )
-        # )
+        self.query2['body']['query']['term']['created_time'] = str(created_time['hits']['hits'][0]['sort'][0])
+
+        docs = self.es_client.search(index = self.query2['index'],
+                                doc_type = self.doc_type,
+                                body = self.query2['body'])
+
+        DEFAULT_EXTRA = 1000
+        avg_response_yaml = {}
+        for doc in docs['hits']['hits']:
+            data = {doc['_type']:{doc['_source']['request_uri']:{doc['_source']['request_method']:
+            {'res_time' : int(math.ceil(doc['_source']['average_time'])),
+             'extra_time' : DEFAULT_EXTRA}
+            }}}
+            #print(data)
+            avg_response_yaml.update(data)
+            print (avg_response_yaml)
+            # avg_response_yaml[self.doc_type][doc['_source']['request_uri']][doc['_source']['request_method']]['res_time'] = int(math.ceil(doc['_source']['average_time']))
+            # avg_response_yaml[self.doc_type][doc['_source']['request_uri']][doc['_source']['request_method']]['extra_time'] = DEFAULT_EXTRA
+
+        print (avg_response_yaml)
         # with open('data.yml', 'w') as outfile:
-        #     yaml.dump(data, outfile, default_flow_style=True)
-        # resp.body = json.dumps(docs, indent = 2)
-        # resp.status = falcon.HTTP_200
+        #     yaml.dump(avg_response_yaml, outfile, default_flow_style=True)
+
+        resp.body = json.dumps(docs, indent = 2)
+        resp.status = falcon.HTTP_200
 
 if __name__ == '__main__':
     data = {'index':'accesslog', 'doc_type':'HTTP'}

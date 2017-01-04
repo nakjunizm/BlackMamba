@@ -21,6 +21,7 @@ export class BarChartTop10Component implements OnInit {
 
     getdocs_buttonName:string = 'getDocs';
     postAvgBtn:string = 'Response_AVG';
+    updateCollectorBtn:string = 'updateCollector';
     docs:string;
     data:any;
 
@@ -80,6 +81,14 @@ export class BarChartTop10Component implements OnInit {
         let _toDate:string = "2016-12-11";
         this._httpService.postResAvg(_fromDate, _toDate).subscribe(
             () => console.log("postAvg Job Done")
+        );
+    }
+
+    public updateCollector():void {
+        this._httpService.updateCollector().subscribe(
+            data => this.docs = JSON.stringify(data),
+            error => console.log("ERROR HTTP GET Service"),
+            () => console.log("Job Done Get !")
         );
     }
 

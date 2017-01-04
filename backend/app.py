@@ -60,10 +60,35 @@ _avgResTimeQuery = {
 }
 avgResTime = data.SearchDocs(es_client, _avgResTimeQuery)
 
+_latestAvgResTimeQuery1 = {
+    'index': 'response_average',
+    'body': {
+            'size' : 1,
+            'sort' : [
+                { 'created_time' :
+                { 'order' : 'desc' }}
+            ]
+        }
+    }
+
+_latestAvgResTimeQuery2 = {
+    'index': 'response_average',
+    'body': {
+            'size' : 100,
+            'query' : {
+                'term': {
+                    'created_time': ''
+                }
+            }
+        }
+    }
+
+avgResTime_updateCollector = data.GetAvgResTime(es_client, [_latestAvgResTimeQuery1,_latestAvgResTimeQuery2], 'http')
 
 api.add_route('/data',docs)
 api.add_route('/top10',top10)
 api.add_route('/avg-res-time',avgResTime)
+api.add_route('/avg-res-time/updateCollector',avgResTime_updateCollector)
 
 if __name__ == '__main__':
     httpd = simple_server.make_server('127.0.0.1', 8000, api)

@@ -73,7 +73,8 @@ class LogFileHandler(PatternMatchingEventHandler):
         _id = uuid.uuid4()
         request_uri = es_source[6]
         response_code = es_source[8]
-        print(es_source)
+        request_method = es_source[5][1:]
+        #print(es_source)
         self.docs.append({
             '_index': 'accesslog',
             '_type': self.type,
@@ -82,7 +83,7 @@ class LogFileHandler(PatternMatchingEventHandler):
                 'request_time': es_source[3][1:],
                 'server_name': socket.gethostname(),
                 'client_ip': es_source[0],
-                'request_method': es_source[5][1:],
+                'request_method': request_method,
                 'request_uri': request_uri,
                 'protocol': es_source[7][:-1],
                 'response_code': response_code,
@@ -90,7 +91,14 @@ class LogFileHandler(PatternMatchingEventHandler):
             }
         })
 
-        if response_code != '200' or (request_uri in AVERAGE_RESTIME_DICT[self.type] and int(es_source[9][:-1]) + int(AVERAGE_RESTIME_DICT[self.type]['extra_time']) > int(AVERAGE_RESTIME_DICT[self.type][es_source[6]])):
+        #{'res_time': 3000, 'extra': 1000}}, '/wp-admin': {'GET': {'res_time': 3000, 'extra': 1000},
+                                                         #'POST': {'res_time': 3000, 'extra': 1000}}}}
+        # AVERAGE_RESTIME_DICT 값 변수로 받아서 처리
+        if (response_code != '200' or
+           ((request_uri in AVERAGE_RESTIME_DICT[self.type]
+           and request_method in AVERAGE_RESTIME_DICT[self.type].get(request_uri))
+           and int(es_source[9][:-1]) + int(AVERAGE_RESTIME_DICT[self.type][request_uri][request_method]['extra_time']) >
+            int(AVERAGE_RESTIME_DICT[self.type][request_uri][request_method]['res_time']))):
             self.docs.append({
                 '_index': 'event',
                 '_type': self.type,
