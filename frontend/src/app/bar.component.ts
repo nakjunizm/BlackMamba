@@ -96,6 +96,7 @@ export class BarChartTop10Component implements OnInit {
         let newLabel:Array<string> = new Array(10);
         let newData:Array<any> = new Array(1);
         newData[0] = {data: new Array(10)};
+        console.log(data)
         let buckets:any[] = data.aggregations.avg_response_time.buckets;
         let i = 0
         buckets.forEach(function(item){
