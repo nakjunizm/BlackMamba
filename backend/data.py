@@ -48,16 +48,16 @@ class SearchDocs:
 
         self.data["body"]["query"] = query
 
+        created_time = str(datetime.today().timestamp()).split(".")[0]
         for doc_type in ["http", "https"]:
             docs = self.es_client.search(index=self.data["index"],
                 doc_type=doc_type, body=self.data["body"]
             )
 
-            print(json.dumps(self.data["body"], indent=2))
-            print(json.dumps(docs, indent=2))
+            # print(json.dumps(self.data["body"], indent=2))
+            # print(json.dumps(docs, indent=2))
 
             input_data = []
-            created_time = str(datetime.today().timestamp()).split(".")[0]
             for uri in docs["aggregations"]["group_by_request_uri"]["buckets"]:
                 print(uri["key"])
                 for method in uri["by_request_method"]["buckets"]:

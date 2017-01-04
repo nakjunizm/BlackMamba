@@ -9,6 +9,8 @@ import { SelectItem } from 'primeng/primeng';
 })
 export class EventListComponent implements OnInit {
 
+  postAvgBtn:string = 'Response_AVG';
+
   constructor(private _httpService:HttpService){
     this.events = [];
     this.events.push({label:'urlA', value:'urlA'});
@@ -33,7 +35,8 @@ export class EventListComponent implements OnInit {
   private selectedDate:string = '';
   private selectedText: string = '';
   private border: string = 'none';
-  date111:Date;
+  dateFrom:Date;
+  dateTo:Date;
   selectedEvent: string[];
 
   ngOnInit() {
@@ -70,6 +73,20 @@ export class EventListComponent implements OnInit {
         data => this.docs = JSON.stringify(data),
         error => console.log("ERROR HTTP GET Service"),
         () => console.log("Job Done Get repeat!")
+    );
+  }
+
+  public postAvg():void {
+    if(this.dateFrom == null || this.dateTo == null) {
+      alert("Please Check the date");
+      return;
+    }
+    let _fromDate:string = this.dateFrom.toLocaleDateString().replace(/\./g,"").replace(/ /g, "-",);
+    let _toDate:string = this.dateTo.toLocaleDateString().replace(/\./g,"").replace(/ /g, "-");
+    console.log("fromDate: " + _fromDate);
+    console.log("toDate: " + _toDate);
+    this._httpService.postResAvg(_fromDate, _toDate).subscribe(
+        () => console.log("postAvg Job Done")
     );
   }
 }
