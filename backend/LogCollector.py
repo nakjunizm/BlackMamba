@@ -6,20 +6,41 @@ from watchdog.events import PatternMatchingEventHandler
 import elasticsearch
 from elasticsearch import helpers
 import yaml
+from socketIO_client import SocketIO
 import uuid
+import threading
+import logging
 
+# create logger
+logger = logging.getLogger('LCLogger')
+logger.setLevel(logging.DEBUG)
+
+# create console handler and set level to debug
+streamHandler = logging.StreamHandler()
+streamHandler.setLevel(logging.DEBUG)
+
+# create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# add formatter to ch
+streamHandler.setFormatter(formatter)
+
+# add ch to logger
+logger.addHandler(streamHandler)
+
+#Dictionary that will filter incomming log lines.
 AVERAGE_RESTIME_DICT={}
 
 class AvgResTimeFileHandler(PatternMatchingEventHandler):
-    patterns = ["average_responsetime.yaml"]
+    patterns = ["*.yaml"]
 
     def on_modified(self, event):
-
+        logger.debug('average_responsetime.yaml has been modified')
         with open(event.src_path, 'r') as f:
             global AVERAGE_RESTIME_DICT
             AVERAGE_RESTIME_DICT.clear
             AVERAGE_RESTIME_DICT = yaml.load(f)
-        print(AVERAGE_RESTIME_DICT)
+        logger.debug(AVERAGE_RESTIME_DICT)
 
 class LogFileHandler(PatternMatchingEventHandler):
     patterns = ["*.log", "ssl_access.log"]
@@ -42,7 +63,6 @@ class LogFileHandler(PatternMatchingEventHandler):
 
         if self.count >= 10:
             elasticsearch.helpers.bulk(self.es_client, self.docs)
-            #print(self.docs)
             self.count = 0
         else:
             with open(event.src_path, 'r') as f:
@@ -59,13 +79,15 @@ class LogFileHandler(PatternMatchingEventHandler):
                     else:
                         self.append_docs(line)
                         self.count += 1
-                        print(self.docs)
-                        print(self.count)
+                        logger.debug(self.docs)
+                        logger.info(self.count)
 
     def on_modified(self, event):
+        logger.debug('logfile has been modified')
         self.process(event)
 
     def on_created(self, event):
+        logger.debug('logfile has been created')
         self.process(event)
 
     def append_docs(self, line):
@@ -74,7 +96,7 @@ class LogFileHandler(PatternMatchingEventHandler):
         request_uri = es_source[6]
         response_code = es_source[8]
         request_method = es_source[5][1:]
-        #print(es_source)
+        logger.debug(es_source)
         self.docs.append({
             '_index': 'accesslog',
             '_type': self.type,
@@ -91,8 +113,6 @@ class LogFileHandler(PatternMatchingEventHandler):
             }
         })
 
-        #{'res_time': 3000, 'extra': 1000}}, '/wp-admin': {'GET': {'res_time': 3000, 'extra': 1000},
-                                                         #'POST': {'res_time': 3000, 'extra': 1000}}}}
         # AVERAGE_RESTIME_DICT 값 변수로 받아서 처리
         if (response_code != '200' or
            ((request_uri in AVERAGE_RESTIME_DICT[self.type]
@@ -112,22 +132,35 @@ class LogFileHandler(PatternMatchingEventHandler):
                 }
             })
 
+class SocketIOThread(threading.Thread):
+
+    def getAvgResTime(self,returnDocs):
+        logger.debug('####AVERAGE_RESTIME_DICT has been sent by api server####')
+        # logger.debug(returnDocs)
+        with open('average_responsetime.yaml', 'w') as f:
+            yaml.dump(returnDocs, f, default_flow_style=False)
+
+    def run(self):
+
+        with SocketIO('localhost', 8000) as socketIO:
+            socketIO.emit('getAvgResTime')
+            socketIO.on('response',self.getAvgResTime)
+            socketIO.wait()
+
 if __name__ == '__main__':
+
+    t = SocketIOThread()
+    t.start()
 
     args = sys.argv[1:]
     observer = Observer()
     observer.schedule(LogFileHandler(), path=args[0] if args else '.')
+    observer.schedule(AvgResTimeFileHandler(), path=args[0] if args else '.')
     observer.start()
 
     with open('average_responsetime.yaml', 'r') as f:
         AVERAGE_RESTIME_DICT.clear
         AVERAGE_RESTIME_DICT = yaml.load(f)
-
-    print(AVERAGE_RESTIME_DICT)
-
-    avgObserver = Observer()
-    avgObserver.schedule(AvgResTimeFileHandler, path='.')
-    avgObserver.start()
 
     try:
         while True:

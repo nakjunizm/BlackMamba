@@ -1,16 +1,110 @@
 http:
-  /wp-admin:
-    GET:
-      res_time: 3000
-      extra_time: 1000
-    POST:
-      res_time: 3000
-      extra_time: 1000
-
   /app/main/posts:
+    DELETE:
+      extra_time: 1000
+      res_time: 4978
     GET:
-      res_time: 3000
       extra_time: 1000
+      res_time: 4999
     POST:
-      res_time: 3000
       extra_time: 1000
+      res_time: 4976
+    PUT:
+      extra_time: 1000
+      res_time: 5008
+  /apps/cart.jsp?appID=5372:
+    GET:
+      extra_time: 1000
+      res_time: 4957
+    PUT:
+      extra_time: 1000
+      res_time: 4918
+  /apps/cart.jsp?appID=8795:
+    GET:
+      extra_time: 1000
+      res_time: 4995
+  /apps/cart.jsp?appID=9541:
+    GET:
+      extra_time: 1000
+      res_time: 4970
+    PUT:
+      extra_time: 1000
+      res_time: 4988
+  /explore:
+    DELETE:
+      extra_time: 1000
+      res_time: 5002
+    GET:
+      extra_time: 1000
+      res_time: 4995
+    POST:
+      extra_time: 1000
+      res_time: 5015
+    PUT:
+      extra_time: 1000
+      res_time: 4995
+  /list:
+    DELETE:
+      extra_time: 1000
+      res_time: 5010
+    GET:
+      extra_time: 1000
+      res_time: 4998
+    POST:
+      extra_time: 1000
+      res_time: 5006
+    PUT:
+      extra_time: 1000
+      res_time: 4995
+  /posts/posts/explore:
+    DELETE:
+      extra_time: 1000
+      res_time: 4989
+    GET:
+      extra_time: 1000
+      res_time: 5007
+    POST:
+      extra_time: 1000
+      res_time: 4984
+    PUT:
+      extra_time: 1000
+      res_time: 4983
+  /search/tag/list:
+    DELETE:
+      extra_time: 1000
+      res_time: 5008
+    GET:
+      extra_time: 1000
+      res_time: 5000
+    POST:
+      extra_time: 1000
+      res_time: 5018
+    PUT:
+      extra_time: 1000
+      res_time: 4992
+  /wp-admin:
+    DELETE:
+      extra_time: 1000
+      res_time: 4997
+    GET:
+      extra_time: 1000
+      res_time: 5005
+    POST:
+      extra_time: 1000
+      res_time: 5017
+    PUT:
+      extra_time: 1000
+      res_time: 4996
+  /wp-content:
+    DELETE:
+      extra_time: 1000
+      res_time: 4994
+    GET:
+      extra_time: 1000
+      res_time: 4993
+    POST:
+      extra_time: 1000
+      res_time: 4998
+    PUT:
+      extra_time: 1000
+      res_time: 4996

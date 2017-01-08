@@ -99,26 +99,23 @@ class GetAvgResTime:
 
         DEFAULT_EXTRA = 1000
         avg_response_yaml = {}
+
         for doc in docs['hits']['hits']:
-            data = {doc['_type']:{doc['_source']['request_uri']:{doc['_source']['request_method']:
-            {'res_time' : int(math.ceil(doc['_source']['average_time'])),
-             'extra_time' : DEFAULT_EXTRA}
-            }}}
-            print(data)
-            key = frozenset(data.items())
-            if key[doc['_type']] in avg_response_yaml:
-                if data[doc['_type']][doc['_source']['request_uri']] in avg_response_yaml:
-                    if data[doc['_type']][doc['_source']['request_uri']][doc['_source']['request_method']] in avg_response_yaml:
-                        avg_response_yaml.update(data[doc['_type']][doc['_source']['request_uri']][doc['_source']['request_method']])
-                    else : avg_response_yaml.update(data[doc['_type']][doc['_source']['request_uri']])
-                else : avg_response_yaml.update(data[doc['_type']])
-            # avg_response_yaml[self.doc_type][doc['_source']['request_uri']][doc['_source']['request_method']]['res_time'] = int(math.ceil(doc['_source']['average_time']))
-            # avg_response_yaml[self.doc_type][doc['_source']['request_uri']][doc['_source']['request_method']]['extra_time'] = DEFAULT_EXTRA
+            _type = doc['_type']
+            _uri = doc['_source']['request_uri']
+            _method = doc['_source']['request_method']
+            data = { _type: {_uri: {_method : { 'res_time' : int(math.ceil(doc['_source']['average_time'])),
+                                'extra_time' : DEFAULT_EXTRA } }}}
 
-        print (avg_response_yaml)
-        # with open('data.yml', 'w') as outfile:
-        #     yaml.dump(avg_response_yaml, outfile, default_flow_style=True)
-
+            if _type not in avg_response_yaml:
+                avg_response_yaml.update(data)
+            elif _uri not in avg_response_yaml[_type]:
+                avg_response_yaml[_type].update(data[_type])
+            elif _method not in avg_response_yaml[_type][_uri]:
+                avg_response_yaml[_type][_uri].update(data[_type][_uri])
+            else :
+                avg_response_yaml[_type][_uri][_method].update(data[_type][_uri][_method])
+        
         return avg_response_yaml
 
 if __name__ == '__main__':

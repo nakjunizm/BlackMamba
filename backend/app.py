@@ -1,9 +1,12 @@
 from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS, cross_origin
+from flask_socketio import SocketIO,emit
 
 import data
 
 app = Flask(__name__)
+app.config['SECRET_KEY']="bl@ckM@mba"
+socketio = SocketIO(app, async_mode='eventlet')
 CORS(app)
 
 es_client = data.ESController("localhost:9200").es_client
@@ -60,6 +63,25 @@ def postResTime():
 
 @app.route('/avg-res-time/updateCollector', methods=['GET'])
 def updateCollector():
+    returnDocs = getAvgResTimeDocs()
+    socketio.emit('response', returnDocs)
+    return make_response(jsonify('{"message":"ok"}'),200)
+
+
+@socketio.on('connect')
+def connect():
+    print('Client connected')
+
+@socketio.on('disconnect')
+def disconnect():
+    print('Client disconnected')
+
+@socketio.on('getAvgResTime')
+def getAvgResTimeOn():
+    returnDocs = getAvgResTimeDocs()
+    emit('response', returnDocs)
+
+def getAvgResTimeDocs():
     _latestAvgResTimeQuery1 = {
         'index': 'response_average',
         'body': {
@@ -85,4 +107,5 @@ def updateCollector():
     return getAvgResTime.on_get([_latestAvgResTimeQuery1,_latestAvgResTimeQuery2],'http')
 
 if __name__ == '__main__':
-    app.run(host='localhost', port=8000, debug=True)
+    #app.run(host='localhost', port=8000, debug=True)
+    socketio.run(app, host='localhost', port=8000, debug=True)
