@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpService } from './http-service.component';
-import { SelectItem } from 'primeng/primeng';
+import { ReqEvent } from './reqevent';
 
 @Component({
   selector: 'event-list',
@@ -9,64 +9,20 @@ import { SelectItem } from 'primeng/primeng';
 })
 export class EventListComponent implements OnInit {
 
+  reqEvents: ReqEvent[];
+  selectedReqEvent: ReqEvent;
+  displayDialog: boolean;
   postAvgBtn:string = 'Response_AVG';
-
-  constructor(private _httpService:HttpService){
-    this.events = [];
-    this.events.push({label:'urlA', value:'urlA'});
-    this.events.push({label:'urlB', value:'urlB'});
-    this.events.push({label:'urlC', value:'urlC'});
-    this.events.push({label:'urlD', value:'urlD'});
-    this.events.push({label:'urlE', value:'urlE'});
-    this.events.push({label:'urlF', value:'urlF'});
-  }
   docs:string;
   get_events_buttonName:string='Get Event List'
-  private myDatePickerOptions = {
-    todayBtnTxt: 'Today',
-    dateFormat: 'yyyy-mm-dd',
-    firstDayOfWeek: 'mo',
-    sunHighlight: true,
-    height: '34px',
-    width: '260px',
-    inline: false,
-    selectionTxtFontSize: '16px'
-  };
-  private selectedDate:string = '';
-  private selectedText: string = '';
-  private border: string = 'none';
   dateFrom:Date;
   dateTo:Date;
-  selectedEvent: string[];
+
+  constructor(private _httpService:HttpService){}
 
   ngOnInit() {
-        console.log('onInit(): DatePicker OnInit');
+    this._httpService.getReqEventList().then(reqEvents => this.reqEvents = reqEvents);
   }
-
-  // onDateChanged(event:any) {
-  //     console.log('onDateChanged(): ', event.date, ' - jsdate: ', new Date(event.jsdate).toLocaleDateString(), ' - formatted: ', event.formatted, ' - epoc timestamp: ', event.epoc);
-  //     if(event.formatted !== '') {
-  //         this.selectedText = 'Formatted: ' + event.formatted + ' - epoc timestamp: ' + event.epoc;
-  //         this.border = '1px solid #CCC';
-  //
-  //         this.selectedDate = event.formatted;
-  //     }
-  //     else {
-  //         this.selectedText = '';
-  //         this.border = 'none';
-  //     }
-  // }
-  //
-  // onInputFieldChanged(event:any) {
-  //   console.log('onInputFieldChanged(): Value: ', event.value, ' - dateFormat: ', event.dateFormat, ' - valid: ', event.valid);
-  // }
-  //
-  // onCalendarViewChanged(event:any) {
-  //   console.log('onCalendarViewChanged(): Year: ', event.year, ' - month: ', event.month, ' - first: ', event.first, ' - last: ', event.last);
-  // }
-
-  events:SelectItem[];
-  selectedItime:string;
 
   public get_events():void {
     this._httpService.getEvents().subscribe(
@@ -83,10 +39,28 @@ export class EventListComponent implements OnInit {
     }
     let _fromDate:string = this.dateFrom.toLocaleDateString().replace(/\./g,"").replace(/ /g, "-",);
     let _toDate:string = this.dateTo.toLocaleDateString().replace(/\./g,"").replace(/ /g, "-");
-    console.log("fromDate: " + _fromDate);
-    console.log("toDate: " + _toDate);
-    this._httpService.postResAvg(_fromDate, _toDate).subscribe(
-        () => console.log("postAvg Job Done")
-    );
+    this._httpService.postResAvg(_fromDate, _toDate).then();
+  }
+
+  reqEventClick(reqEvent:ReqEvent):void {
+    //TODO: dataList Refresh
+    this._httpService.updateReqEventChecked(reqEvent.id, reqEvent.type)
+                      .then(res => this.callbackRefresh(res));
+  }
+
+  selectReqEvent(reqEvent: ReqEvent) {
+    this.selectedReqEvent = reqEvent;
+    this.displayDialog = true;
+  }
+
+  onDialogHide() {
+    this.selectedReqEvent = null;
+  }
+
+  callbackRefresh(data:any):any {
+    console.log(data)
+    let e = new Date().getTime() + 1000;
+    while(new Date().getTime() <= e) {}
+    this._httpService.getReqEventList().then(reqEvents => this.reqEvents = reqEvents);
   }
 }
