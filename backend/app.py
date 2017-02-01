@@ -78,7 +78,10 @@ def disconnect():
 
 @socketio.on('getAvgResTime')
 def getAvgResTimeOn():
-    returnDocs = getAvgResTimeDocs()
+    try:
+        returnDocs = getAvgResTimeDocs()
+    except:
+        returnDocs = 'None'
     emit('response', returnDocs)
 
 def getAvgResTimeDocs():

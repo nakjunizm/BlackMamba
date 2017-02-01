@@ -7,16 +7,20 @@ import { MaterialModule } from '@angular/material';
 import 'hammerjs';
 import { CalendarModule } from 'primeng/primeng';
 import { ListboxModule } from 'primeng/primeng';
+import { ChartModule } from 'primeng/primeng';
+import { TabViewModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 import { BarChartTop10Component } from './bar.component';
 import { EventListComponent } from './event-list.component';
+import { ChartComponent } from './chart.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     BarChartTop10Component,
-    EventListComponent
+    EventListComponent,
+    ChartComponent
   ],
   imports: [
     MaterialModule.forRoot(),
@@ -26,13 +30,17 @@ import { EventListComponent } from './event-list.component';
     JsonpModule,
     ChartsModule,
     CalendarModule,
-    ListboxModule
+    ListboxModule,
+    ChartModule,
+    TabViewModule
   ],
   providers: [],
   bootstrap: [
     AppComponent,
     BarChartTop10Component,
-    EventListComponent
+    EventListComponent,
+    ChartComponent
+
   ]
 })
 export class AppModule { }

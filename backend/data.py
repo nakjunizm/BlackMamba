@@ -46,7 +46,8 @@ class SearchDocs:
 
         ref_str = body["reference_date_to"].split("-")
         reference_date_to = date(int(ref_str[0]), int(ref_str[1]), int(ref_str[2]))
-        query["range"]["request_time"]["lte"] = reference_date_to.isoformat()
+        # query["range"]["request_time"]["lte"] = reference_date_to.isoformat()
+        query["range"]["request_time"]["lte"] = '2017-12-31'
 
         self.data["body"]["query"] = query
 
@@ -75,7 +76,8 @@ class SearchDocs:
                     }
                 })
 
-        elasticsearch.helpers.bulk(self.es_client, input_data)
+        result = elasticsearch.helpers.bulk(self.es_client, input_data)
+        print(result)
         return make_response(jsonify('{"message":"ok"}'),200)
 
 class GetAvgResTime:
@@ -115,7 +117,7 @@ class GetAvgResTime:
                 avg_response_yaml[_type][_uri].update(data[_type][_uri])
             else :
                 avg_response_yaml[_type][_uri][_method].update(data[_type][_uri][_method])
-        
+
         return avg_response_yaml
 
 if __name__ == '__main__':

@@ -27,10 +27,12 @@ export class BarChartTop10Component implements OnInit {
 
     constructor(private _httpService:HttpService){}
 
-    @ViewChild("myChart") myChart;
+    @ViewChild("httpChart") httpChart;
+    @ViewChild("httpsChart") httpsChart;
 
     ngOnInit() {
-        this.el = this.myChart.nativeElement;
+        this.el = this.httpChart.nativeElement;
+        this.el = this.httpsChart.nativeElement;
     }
 
     public barChartOptions:any = {

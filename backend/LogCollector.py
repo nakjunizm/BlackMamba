@@ -31,6 +31,8 @@ logger.addHandler(streamHandler)
 #Dictionary that will filter incomming log lines.
 AVERAGE_RESTIME_DICT={}
 
+usingFilter=False
+
 class AvgResTimeFileHandler(PatternMatchingEventHandler):
     patterns = ["*.yaml"]
 
@@ -60,7 +62,7 @@ class LogFileHandler(PatternMatchingEventHandler):
         event.src_path
             path/to/observed/file
         """
-
+        logger.debug(self.count)
         if self.count >= 10:
             elasticsearch.helpers.bulk(self.es_client, self.docs)
             self.count = 0
@@ -114,7 +116,7 @@ class LogFileHandler(PatternMatchingEventHandler):
         })
 
         # AVERAGE_RESTIME_DICT 값 변수로 받아서 처리
-        if (response_code != '200' or
+        if usingFilter and (response_code != '200' or
            ((request_uri in AVERAGE_RESTIME_DICT[self.type]
            and request_method in AVERAGE_RESTIME_DICT[self.type].get(request_uri))
            and int(es_source[9][:-1]) + int(AVERAGE_RESTIME_DICT[self.type][request_uri][request_method]['extra_time']) >
@@ -137,11 +139,12 @@ class SocketIOThread(threading.Thread):
     def getAvgResTime(self,returnDocs):
         logger.debug('####AVERAGE_RESTIME_DICT has been sent by api server####')
         # logger.debug(returnDocs)
-        with open('average_responsetime.yaml', 'w') as f:
-            yaml.dump(returnDocs, f, default_flow_style=False)
+        if returnDocs != 'None' :
+            with open('average_responsetime.yaml', 'w') as f:
+                yaml.dump(returnDocs, f, default_flow_style=False)
+                usingFilter=True
 
     def run(self):
-
         with SocketIO('localhost', 8000) as socketIO:
             socketIO.emit('getAvgResTime')
             socketIO.on('response',self.getAvgResTime)
@@ -158,9 +161,15 @@ if __name__ == '__main__':
     observer.schedule(AvgResTimeFileHandler(), path=args[0] if args else '.')
     observer.start()
 
-    with open('average_responsetime.yaml', 'r') as f:
-        AVERAGE_RESTIME_DICT.clear
-        AVERAGE_RESTIME_DICT = yaml.load(f)
+    try:
+        usingFilter=True
+        with open('average_responsetime.yaml', 'r') as f:
+            AVERAGE_RESTIME_DICT.clear
+            AVERAGE_RESTIME_DICT = yaml.load(f)
+    except:
+        logger.info('There is no average_responsetime.yaml file!!!')
+        usingFilter=False
+
 
     try:
         while True:

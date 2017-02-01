@@ -24,7 +24,7 @@ export class HttpService {
   getDocsRestfulRepeat(){
     console.log('in');
     let _top10Url:string = 'http://localhost:8000/top10';
-    return Observable.interval(500)
+    return Observable.interval(3000)
                     .switchMap(() => this._http.get(_top10Url)
                     .map(res => res.json()))
                     .catch(this.handleError);

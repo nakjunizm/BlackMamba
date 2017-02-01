@@ -2,109 +2,100 @@ http:
   /app/main/posts:
     DELETE:
       extra_time: 1000
-      res_time: 4978
+      res_time: 4997
     GET:
       extra_time: 1000
-      res_time: 4999
+      res_time: 4978
     POST:
       extra_time: 1000
-      res_time: 4976
+      res_time: 5000
     PUT:
       extra_time: 1000
-      res_time: 5008
-  /apps/cart.jsp?appID=5372:
-    GET:
-      extra_time: 1000
-      res_time: 4957
+      res_time: 5026
+  /apps/cart.jsp?appID=1330:
     PUT:
       extra_time: 1000
-      res_time: 4918
-  /apps/cart.jsp?appID=8795:
+      res_time: 4942
+  /apps/cart.jsp?appID=1483:
     GET:
       extra_time: 1000
-      res_time: 4995
-  /apps/cart.jsp?appID=9541:
-    GET:
-      extra_time: 1000
-      res_time: 4970
+      res_time: 5039
+  /apps/cart.jsp?appID=2305:
     PUT:
+      extra_time: 1000
+      res_time: 5059
+  /explore:
+    GET:
       extra_time: 1000
       res_time: 4988
-  /explore:
-    DELETE:
-      extra_time: 1000
-      res_time: 5002
-    GET:
-      extra_time: 1000
-      res_time: 4995
     POST:
       extra_time: 1000
-      res_time: 5015
+      res_time: 5089
     PUT:
       extra_time: 1000
-      res_time: 4995
+      res_time: 5029
   /list:
     DELETE:
       extra_time: 1000
-      res_time: 5010
+      res_time: 5029
     GET:
       extra_time: 1000
-      res_time: 4998
+      res_time: 5009
     POST:
       extra_time: 1000
-      res_time: 5006
+      res_time: 5033
     PUT:
       extra_time: 1000
-      res_time: 4995
+      res_time: 4949
   /posts/posts/explore:
     DELETE:
       extra_time: 1000
-      res_time: 4989
+      res_time: 5009
     GET:
       extra_time: 1000
-      res_time: 5007
-    POST:
-      extra_time: 1000
-      res_time: 4984
-    PUT:
-      extra_time: 1000
-      res_time: 4983
-  /search/tag/list:
-    DELETE:
-      extra_time: 1000
-      res_time: 5008
-    GET:
-      extra_time: 1000
-      res_time: 5000
+      res_time: 4996
     POST:
       extra_time: 1000
       res_time: 5018
     PUT:
       extra_time: 1000
+      res_time: 5023
+  /search/tag/list:
+    DELETE:
+      extra_time: 1000
+      res_time: 5010
+    GET:
+      extra_time: 1000
       res_time: 4992
+    POST:
+      extra_time: 1000
+      res_time: 4986
+    PUT:
+      extra_time: 1000
+      res_time: 4976
   /wp-admin:
     DELETE:
       extra_time: 1000
-      res_time: 4997
+      res_time: 5003
     GET:
       extra_time: 1000
-      res_time: 5005
+      res_time: 4999
     POST:
       extra_time: 1000
-      res_time: 5017
+      res_time: 5019
     PUT:
       extra_time: 1000
-      res_time: 4996
+      res_time: 4959
   /wp-content:
     DELETE:
       extra_time: 1000
-      res_time: 4994
+      res_time: 4946
     GET:
       extra_time: 1000
-      res_time: 4993
+      res_time: 5013
     POST:
       extra_time: 1000
-      res_time: 4998
+      res_time: 4992
     PUT:
       extra_time: 1000
-      res_time: 4996
+      res_time: 5001
