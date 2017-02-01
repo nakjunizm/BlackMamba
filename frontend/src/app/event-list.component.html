@@ -7,7 +7,51 @@
 <div class="ui-g-2 ui-md-1 ui-lg-2">
     <button (click)="postAvg()">{{postAvgBtn}}</button>
 </div>
-<div class="ui-g-6">
-    <p-listbox [options]="events" [(ngModel)]="selectedEvent" multiple="multiple" checkbox="checkbox" filter="filter"></p-listbox>
-    <p>Selected Event: {{ selectedEvent }}</p>
+
+<div class="ui-g-12">
+    <p-dataList [value]="reqEvents" [paginator]="true" [rows]="5">
+        <header>
+            Request Smell List
+        </header>
+        <template let-reqEvent let-i="index">
+            <div class="ui-grid ui-grid-responsive ui-fluid" style="font-size:16px;padding:20px;border-bottom:1px solid #D5D5D5;">
+                <div class="ui-grid-row">
+                    <div class="ui-grid-col-1" style="text-align:center"><i class="fa fa-search" (click)="selectReqEvent(reqEvent)" style="cursor:pointer;float:left;margin-right:5px"></i></div>
+                    <div class="ui-grid-col-8">
+                        <div class="ui-grid ui-grid-responsive ui-fluid">
+                            <div class="ui-grid-row">
+                                <div class="ui-grid-col-2">URI: </div>
+                                <div class="ui-grid-col-10">{{reqEvent.requestUri}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ui-grid-col-3" style="text-align:center"><p-checkbox name="check" label="Check Req" [(ngModel)]= "reqEvent.isChecked" binary="true" (click)="reqEventClick(reqEvent)"></p-checkbox></div>
+                </div>
+            </div>
+        </template>
+    </p-dataList>
 </div>
+
+<p-dialog header="Request Details" [(visible)]="displayDialog" [responsive]="true" showEffect="fade" [modal]="true" width="525" (onAfterHide)="onDialogHide()">
+    <div class="ui-grid ui-grid-responsive ui-fluid" *ngIf="selectedReqEvent" style="font-size:16px;text-align:center;padding:20px">
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3" style="font-weight: bold;text-align: right">Protocol: </div>
+            <div class="ui-grid-col-9">{{selectedReqEvent.type.toUpperCase()}}</div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3" style="font-weight: bold;text-align: right">URI: </div>
+            <div class="ui-grid-col-9">{{selectedReqEvent.requestUri}}</div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3" style="font-weight: bold;text-align: right">Method: </div>
+            <div class="ui-grid-col-9">{{selectedReqEvent.requestMethod}}</div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3" style="font-weight: bold;text-align: right">Resp Time: </div>
+            <div class="ui-grid-col-9">{{selectedReqEvent.responseTime}}</div>
+        </div>
+        <div class="ui-grid-row">
+            <div class="ui-grid-col-3" style="font-weight: bold;text-align: right">Status Code: </div>
+            <div class="ui-grid-col-9">{{selectedReqEvent.responseCode}}</div>
+        </div>
+    </div>

@@ -59,7 +59,6 @@ class SearchDocs:
 
             input_data = []
             for uri in docs["aggregations"]["group_by_request_uri"]["buckets"]:
-                print(uri["key"])
                 for method in uri["by_request_method"]["buckets"]:
                     input_data.append({
                         "_index": "response_average",

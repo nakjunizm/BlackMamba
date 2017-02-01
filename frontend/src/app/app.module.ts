@@ -7,6 +7,8 @@ import { MaterialModule } from '@angular/material';
 import 'hammerjs';
 import { CalendarModule } from 'primeng/primeng';
 import { ListboxModule } from 'primeng/primeng';
+import { CheckboxModule, DataListModule, DialogModule } from 'primeng/primeng';
+import { Header, Footer } from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 import { BarChartTop10Component } from './bar.component';
@@ -26,7 +28,10 @@ import { EventListComponent } from './event-list.component';
     JsonpModule,
     ChartsModule,
     CalendarModule,
-    ListboxModule
+    ListboxModule,
+    CheckboxModule,
+    DataListModule,
+    DialogModule
   ],
   providers: [],
   bootstrap: [

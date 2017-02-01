@@ -2,9 +2,11 @@ import falcon
 from falcon_cors import CORS
 import data
 from wsgiref import simple_server
+import mock_rest
 
 cors = CORS(allow_all_origins=True,
-            allow_all_methods=True)
+            allow_all_methods=True,
+            allow_all_headers=True)
 api = application = falcon.API(middleware=[cors.middleware])
 
 es_client = data.ESController("localhost:9200").es_client
@@ -64,6 +66,10 @@ avgResTime = data.SearchDocs(es_client, _avgResTimeQuery)
 api.add_route('/data',docs)
 api.add_route('/top10',top10)
 api.add_route('/avg-res-time',avgResTime)
+
+# For test
+api.add_route('/event', mock_rest.MockEventAPI())
+api.add_route('/event/{id}', mock_rest.MockEventAPI())
 
 if __name__ == '__main__':
     httpd = simple_server.make_server('127.0.0.1', 8000, api)
