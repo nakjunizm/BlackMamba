@@ -9,6 +9,7 @@ import { CalendarModule } from 'primeng/primeng';
 import { ListboxModule } from 'primeng/primeng';
 import { CheckboxModule, DataListModule, DialogModule } from 'primeng/primeng';
 import { Header, Footer } from 'primeng/primeng';
+import { TabViewModule } from 'primeng/primeng';
 
 import { AppComponent } from './app.component';
 import { BarChartTop10Component } from './bar.component';
@@ -31,13 +32,15 @@ import { EventListComponent } from './event-list.component';
     ListboxModule,
     CheckboxModule,
     DataListModule,
-    DialogModule
+    DialogModule,
+    TabViewModule
   ],
   providers: [],
   bootstrap: [
     AppComponent,
     BarChartTop10Component,
     EventListComponent
+
   ]
 })
 export class AppModule { }

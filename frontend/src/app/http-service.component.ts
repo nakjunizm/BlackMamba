@@ -21,7 +21,7 @@ export class HttpService {
   getDocsRestfulRepeat(){
     console.log('in');
     let _top10Url:string = 'http://localhost:8000/top10';
-    return Observable.interval(500)
+    return Observable.interval(3000)
                     .switchMap(() => this._http.get(_top10Url)
                     .map(res => res.json()))
                     .catch(this.handleError);
@@ -43,8 +43,8 @@ export class HttpService {
                     .catch(this.handleError);
   }
 
-  getAvgResTime(){
-    let _avgResTimeUrl:string = 'http://localhost:8000/avg-res-time';
+  updateCollector(){
+    let _avgResTimeUrl:string = 'http://localhost:8000/avg-res-time/updateCollector';
     return this._http.get(_avgResTimeUrl)
                     .map(res => res.json())
                     .catch(this.handleError);

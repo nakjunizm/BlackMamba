@@ -10,12 +10,11 @@ from faker import Faker
 
 
 faker = Faker()
-log_lines = 1
+log_lines = 8
 f = open('./backend/access.log', 'a+')
 
 otime = datetime.datetime.now()
 
-outFileName = 'access.log'
 response=["200","404","500","301"]
 verb=["GET","POST","DELETE","PUT"]
 resources=["/list","/wp-content","/wp-admin","/explore","/search/tag/list","/app/main/posts","/posts/posts/explore","/apps/cart.jsp?appID="]

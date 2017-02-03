@@ -1,18 +1,33 @@
 <md-toolbar color="primary">
-    
+
     BlackMamba
 </md-toolbar>
 
 <div>
-    <div style="display: block">
-        <canvas #myChart baseChart
-            [datasets]="barChartData"
-            [labels]="barChartLabels"
-            [options]="barChartOptions"
-            [legend]="barChartLegend"
-            [chartType]="barChartType"></canvas>
-    </div>
+    <p-tabView>
+      <p-tabPanel header="http">
+        <div style="display: block">
+            <canvas #httpChart baseChart
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"></canvas>
+        </div>
+      </p-tabPanel>
+      <p-tabPanel header="https">
+        <div style="display: block">
+            <canvas #httpsChart baseChart
+                [datasets]="barChartData"
+                [labels]="barChartLabels"
+                [options]="barChartOptions"
+                [legend]="barChartLegend"
+                [chartType]="barChartType"></canvas>
+        </div>
+      </p-tabPanel>
+    </p-tabView>
     <button (click)="transform()">{{buttonName}}</button>
     <button (click)="getdocs()">{{getdocs_buttonName}}</button>
     {{docs}}
+    <button (click)="updateCollector()">{{updateCollectorBtn}}</button>
 </div>

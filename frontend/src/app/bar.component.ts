@@ -20,15 +20,20 @@ export class BarChartTop10Component implements OnInit {
     flag:boolean = true;
 
     getdocs_buttonName:string = 'getDocs';
+
+    postAvgBtn:string = 'Response_AVG';
+    updateCollectorBtn:string = 'updateCollector';
     docs:string;
     data:any;
 
     constructor(private _httpService:HttpService){}
 
-    @ViewChild("myChart") myChart;
+    @ViewChild("httpChart") httpChart;
+    @ViewChild("httpsChart") httpsChart;
 
     ngOnInit() {
-        this.el = this.myChart.nativeElement;
+        this.el = this.httpChart.nativeElement;
+        this.el = this.httpsChart.nativeElement;
     }
 
     public barChartOptions:any = {
@@ -74,10 +79,27 @@ export class BarChartTop10Component implements OnInit {
 
     }
 
+    public postAvg():void {
+        let _fromDate:string = "2016-12-01";
+        let _toDate:string = "2016-12-11";
+        this._httpService.postResAvg(_fromDate, _toDate).subscribe(
+            () => console.log("postAvg Job Done")
+        );
+    }
+
+    public updateCollector():void {
+        this._httpService.updateCollector().subscribe(
+            data => this.docs = JSON.stringify(data),
+            error => console.log("ERROR HTTP GET Service"),
+            () => console.log("Job Done Get !")
+        );
+    }
+
     private convertLabelAndData(data:any):void {
         let newLabel:Array<string> = new Array(10);
         let newData:Array<any> = new Array(1);
         newData[0] = {data: new Array(10)};
+        console.log(data)
         let buckets:any[] = data.aggregations.avg_response_time.buckets;
         let i = 0
         buckets.forEach(function(item){
