@@ -130,7 +130,7 @@ class LogFileHandler(PatternMatchingEventHandler):
                     'request_method': es_source[5][1:],
                     'response_time': es_source[9][:-1],
                     'response_code': response_code,
-                    'is_checked': False
+                    'is_checked': 'false'
                 }
             })
 
