@@ -68,13 +68,15 @@ def updateCollector():
     socketio.emit('response', returnDocs)
     return make_response(jsonify('{"message":"ok"}'),200)
 
-@app.route('/event')
+@app.route('/event', methods=['GET'])
 def event_test():
-    return mock_rest.MockEventAPI()
+    mock = mock_rest.MockEventAPI()
+    return mock.on_get(request)
 
-@app.route('/event{id}')
-def event_test_withId():
-    return mock_rest.MockEventAPI()
+@app.route('/event/<id>', methods=['PUT'])
+def event_test_withId(id):
+    mock = mock_rest.MockEventAPI()
+    return mock.on_put(request,id)
 
 @socketio.on('connect')
 def connect():
