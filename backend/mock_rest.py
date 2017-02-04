@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import json
+import time
 
 import elasticsearch
 from elasticsearch import helpers
@@ -39,6 +40,20 @@ class MockEventAPI:
 
         es_doc = self.es_client.update(index='event', id=id, doc_type=body['doc_type'],
                                 body={'doc': doc})
+
+        # Waiting ES refresh
+        query = dict()
+        query['term'] = dict()
+        query['term']['_id'] = id
+        body = dict()
+        body['query'] = query
+        index = 'event'
+        refresh_flag = False
+        count = 0
+        while not refresh_flag:
+            chk_doc = self.es_client.search(index=index, body=body)
+            refresh_flag = chk_doc['hits']['hits'][0]['_source']['is_checked']
+            time.sleep(0.5)
 
         return make_response(jsonify(es_doc),200)
 

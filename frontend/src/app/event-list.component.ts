@@ -59,8 +59,6 @@ export class EventListComponent implements OnInit {
 
   callbackRefresh(data:any):any {
     console.log(data)
-    let e = new Date().getTime() + 1000;
-    while(new Date().getTime() <= e) {}
     this._httpService.getReqEventList().then(reqEvents => this.reqEvents = reqEvents);
   }
 }
