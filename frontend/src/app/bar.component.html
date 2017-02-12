@@ -8,8 +8,8 @@
       <p-tabPanel header="http">
         <div style="display: block">
             <canvas #httpChart baseChart
-                [datasets]="barChartData"
-                [labels]="barChartLabels"
+                [datasets]="httpData"
+                [labels]="httpLabels"
                 [options]="barChartOptions"
                 [legend]="barChartLegend"
                 [chartType]="barChartType"></canvas>
@@ -18,8 +18,8 @@
       <p-tabPanel header="https">
         <div style="display: block">
             <canvas #httpsChart baseChart
-                [datasets]="barChartData"
-                [labels]="barChartLabels"
+                [datasets]="httpsData"
+                [labels]="httpsLabels"
                 [options]="barChartOptions"
                 [legend]="barChartLegend"
                 [chartType]="barChartType"></canvas>

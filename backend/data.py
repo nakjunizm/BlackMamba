@@ -6,6 +6,11 @@ import mimetypes
 from datetime import datetime, date
 from collections import defaultdict
 import math
+import logging
+
+# create logger
+logger = logging.getLogger('data')
+logger.setLevel(logging.DEBUG)
 
 import yaml
 
@@ -46,32 +51,40 @@ class SearchDocs:
 
         ref_str = body["reference_date_to"].split("-")
         reference_date_to = date(int(ref_str[0]), int(ref_str[1]), int(ref_str[2]))
-        # query["range"]["request_time"]["lte"] = reference_date_to.isoformat()
-        query["range"]["request_time"]["lte"] = '2017-12-31'
+        query["range"]["request_time"]["lte"] = reference_date_to.isoformat()
 
         self.data["body"]["query"] = query
 
         created_time = str(datetime.today().timestamp()).split(".")[0]
 
-        for uri in docs["aggregations"]["group_by_request_uri"]["buckets"]:
-            print(uri["key"])
-            for method in uri["by_request_method"]["buckets"]:
-                input_data.append({
-                    "_index": "response_average",
-                    "_type": self.data["doc_type"],
-                    "_source": {
-                        "request_uri": uri["key"],
-                        "request_method": method["key"],
-                        "average_time": method["response_time_avg"]["value"],
-                        "reference_time_from": reference_date_from.isoformat(),
-                        "reference_time_to": reference_date_to.isoformat(),
-                        "created_time": created_time
-                    }
-                })
+        for doc_type in ["http", "https"]:
+            docs = self.es_client.search(index=self.data["index"],
+                doc_type=doc_type, body=self.data["body"]
+            )
+
+            # print(json.dumps(self.data["body"], indent=2))
+            # print(json.dumps(docs, indent=2))
+
+            input_data = []
+            for uri in docs["aggregations"]["group_by_request_uri"]["buckets"]:
+                for method in uri["by_request_method"]["buckets"]:
+                    input_data.append({
+                        "_index": "response_average",
+                        "_type": doc_type,
+                        "_source": {
+                            "request_uri": uri["key"],
+                            "request_method": method["key"],
+                            "average_time": method["response_time_avg"]["value"],
+                            "reference_time_from": reference_date_from.isoformat(),
+                            "reference_time_to": reference_date_to.isoformat(),
+                            "created_time": created_time
+                        }
+                    })
 
         result = elasticsearch.helpers.bulk(self.es_client, input_data)
-        print(result)
+        logger.DEBUG(result)
         return make_response(jsonify('{"message":"ok"}'),200)
+
 
 class GetAvgResTime:
 

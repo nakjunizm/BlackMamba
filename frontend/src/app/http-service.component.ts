@@ -11,16 +11,16 @@ export class HttpService {
 
   constructor(private _http: Http){}
 
-  getDocsRestful(){
-    let _top10Url:string = 'http://localhost:8000/top10';
+  getDocsRestful(type:string){
+    let _top10Url:string = 'http://localhost:8000/top10/'+type;
     return this._http.get(_top10Url)
                     .map(res => res.json())
                     .catch(this.handleError);
   }
 
-  getDocsRestfulRepeat(){
+  getDocsRestfulRepeat(type:string){
     console.log('in');
-    let _top10Url:string = 'http://localhost:8000/top10';
+    let _top10Url:string = 'http://localhost:8000/top10/'+type;
     return Observable.interval(3000)
                     .switchMap(() => this._http.get(_top10Url)
                     .map(res => res.json()))

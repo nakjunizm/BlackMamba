@@ -5,10 +5,20 @@ from flask_socketio import SocketIO,emit
 import data
 import mock_rest
 
+import logging.config, os, yaml
+
 app = Flask(__name__)
 app.config['SECRET_KEY']="bl@ckM@mba"
 socketio = SocketIO(app, async_mode='eventlet')
 CORS(app)
+
+loggingConfigPath = './conf/logging.yaml'
+if os.path.exists(loggingConfigPath):
+    with open(loggingConfigPath, 'rt') as f:
+        loggingConfig = yaml.load(f.read())
+        logging.config.dictConfig(loggingConfig)
+else:
+    logging.basicConfig(level=logging.INFO)
 
 es_client = data.ESController("localhost:9200").es_client
 searchDocs = data.SearchDocs(es_client)
@@ -18,10 +28,10 @@ getAvgResTime = data.GetAvgResTime(es_client)
 def getDocs():
     return searchDocs.on_get({'index':'accesslog', 'doc_type':'http', 'body':''})
 
-@app.route('/top10', methods=['GET'])
-def getTop10():
+@app.route('/top10/<type>', methods=['GET'])
+def getTop10(type):
     _top10Query = {'index':'accesslog',
-        'doc_type':'http',
+        'doc_type':type,
         'body': {
             'size': 0,
             'aggs': {
@@ -80,11 +90,11 @@ def event_test_withId(id):
 
 @socketio.on('connect')
 def connect():
-    print('Client connected')
+    logging.debug('Client connected')
 
 @socketio.on('disconnect')
 def disconnect():
-    print('Client disconnected')
+    logging.debug('Client disconnected')
 
 @socketio.on('getAvgResTime')
 def getAvgResTimeOn():

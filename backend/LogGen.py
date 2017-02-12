@@ -10,7 +10,7 @@ from faker import Faker
 
 
 faker = Faker()
-log_lines = 8
+log_lines = 20
 f = open('./backend/access.log', 'a+')
 
 otime = datetime.datetime.now()

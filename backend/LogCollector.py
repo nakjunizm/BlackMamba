@@ -9,24 +9,15 @@ import yaml
 from socketIO_client import SocketIO
 import uuid
 import threading
-import logging
+import logging.config, os, yaml
 
-# create logger
-logger = logging.getLogger('LCLogger')
-logger.setLevel(logging.DEBUG)
-
-# create console handler and set level to debug
-streamHandler = logging.StreamHandler()
-streamHandler.setLevel(logging.DEBUG)
-
-# create formatter
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-
-# add formatter to ch
-streamHandler.setFormatter(formatter)
-
-# add ch to logger
-logger.addHandler(streamHandler)
+loggingConfigPath = './conf/logging.yaml'
+if os.path.exists(loggingConfigPath):
+    with open(loggingConfigPath, 'rt') as f:
+        loggingConfig = yaml.load(f.read())
+        logging.config.dictConfig(loggingConfig)
+else:
+    logging.basicConfig(level=logging.INFO)
 
 #Dictionary that will filter incomming log lines.
 AVERAGE_RESTIME_DICT={}
@@ -37,12 +28,12 @@ class AvgResTimeFileHandler(PatternMatchingEventHandler):
     patterns = ["*.yaml"]
 
     def on_modified(self, event):
-        logger.debug('average_responsetime.yaml has been modified')
+        logging.debug('average_responsetime.yaml has been modified')
         with open(event.src_path, 'r') as f:
             global AVERAGE_RESTIME_DICT
             AVERAGE_RESTIME_DICT.clear
             AVERAGE_RESTIME_DICT = yaml.load(f)
-        logger.debug(AVERAGE_RESTIME_DICT)
+        logging.debug(AVERAGE_RESTIME_DICT)
 
 class LogFileHandler(PatternMatchingEventHandler):
     patterns = ["*.log", "ssl_access.log"]
@@ -62,7 +53,7 @@ class LogFileHandler(PatternMatchingEventHandler):
         event.src_path
             path/to/observed/file
         """
-        logger.debug(self.count)
+        logging.debug(self.count)
         if self.count >= 10:
             elasticsearch.helpers.bulk(self.es_client, self.docs)
             self.count = 0
@@ -81,15 +72,15 @@ class LogFileHandler(PatternMatchingEventHandler):
                     else:
                         self.append_docs(line)
                         self.count += 1
-                        logger.debug(self.docs)
-                        logger.info(self.count)
+                        logging.debug(self.docs)
+                        logging.info(self.count)
 
     def on_modified(self, event):
-        logger.debug('logfile has been modified')
+        logging.debug('logfile has been modified')
         self.process(event)
 
     def on_created(self, event):
-        logger.debug('logfile has been created')
+        logging.debug('logfile has been created')
         self.process(event)
 
     def append_docs(self, line):
@@ -98,7 +89,7 @@ class LogFileHandler(PatternMatchingEventHandler):
         request_uri = es_source[6]
         response_code = es_source[8]
         request_method = es_source[5][1:]
-        logger.debug(es_source)
+        logging.debug(es_source)
         self.docs.append({
             '_index': 'accesslog',
             '_type': self.type,
@@ -137,7 +128,7 @@ class LogFileHandler(PatternMatchingEventHandler):
 class SocketIOThread(threading.Thread):
 
     def getAvgResTime(self,returnDocs):
-        logger.debug('####AVERAGE_RESTIME_DICT has been sent by api server####')
+        logging.debug('####AVERAGE_RESTIME_DICT has been sent by api server####')
         # logger.debug(returnDocs)
         if returnDocs != 'None' :
             with open('average_responsetime.yaml', 'w') as f:
@@ -167,7 +158,7 @@ if __name__ == '__main__':
             AVERAGE_RESTIME_DICT.clear
             AVERAGE_RESTIME_DICT = yaml.load(f)
     except:
-        logger.info('There is no average_responsetime.yaml file!!!')
+        logging.info('There is no average_responsetime.yaml file!!!')
         usingFilter=False
 
 

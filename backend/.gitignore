@@ -3,3 +3,7 @@
 /lib
 pyvenv.cfg
 pip-selfcheck.json
+
+# Log Files
+/log
+*.log
