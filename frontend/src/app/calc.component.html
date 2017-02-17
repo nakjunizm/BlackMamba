@@ -1,0 +1,13 @@
+<div class="ui-g">
+  <div class="ui-g-12 ui-g-nopad">
+    <div class="ui-g-12 ui-md-5">
+      From Date: <p-calendar [(ngModel)]="dateFrom" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+    </div>
+    <div class="ui-g-12 ui-md-5">
+      To Date: <p-calendar [(ngModel)]="dateTo" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
+    </div>
+    <div class="ui-g-12 ui-md-2">
+      <button (click)="postAvg()">{{postAvgBtn}}</button>
+    </div>
+  </div>
+</div>

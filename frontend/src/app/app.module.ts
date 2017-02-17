@@ -14,12 +14,14 @@ import { TabViewModule } from 'primeng/primeng';
 import { AppComponent } from './app.component';
 import { BarChartTop10Component } from './bar.component';
 import { EventListComponent } from './event-list.component';
+import { CalcComponent } from './calc.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BarChartTop10Component,
-    EventListComponent
+    EventListComponent,
+    CalcComponent
   ],
   imports: [
     MaterialModule.forRoot(),
@@ -39,8 +41,8 @@ import { EventListComponent } from './event-list.component';
   bootstrap: [
     AppComponent,
     BarChartTop10Component,
-    EventListComponent
-
+    EventListComponent,
+    CalcComponent
   ]
 })
 export class AppModule { }

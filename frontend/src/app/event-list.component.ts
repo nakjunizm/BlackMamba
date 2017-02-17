@@ -12,11 +12,8 @@ export class EventListComponent implements OnInit {
   reqEvents: ReqEvent[];
   selectedReqEvent: ReqEvent;
   displayDialog: boolean;
-  postAvgBtn:string = 'Response_AVG';
   docs:string;
   get_events_buttonName:string='Get Event List'
-  dateFrom:Date;
-  dateTo:Date;
 
   constructor(private _httpService:HttpService){}
 
@@ -30,16 +27,6 @@ export class EventListComponent implements OnInit {
         error => console.log("ERROR HTTP GET Service"),
         () => console.log("Job Done Get repeat!")
     );
-  }
-
-  public postAvg():void {
-    if(this.dateFrom == null || this.dateTo == null) {
-      alert("Please Check the date");
-      return;
-    }
-    let _fromDate:string = this.dateFrom.toLocaleDateString().replace(/\./g,"").replace(/ /g, "-",);
-    let _toDate:string = this.dateTo.toLocaleDateString().replace(/\./g,"").replace(/ /g, "-");
-    this._httpService.postResAvg(_fromDate, _toDate).then();
   }
 
   reqEventClick(reqEvent:ReqEvent):void {

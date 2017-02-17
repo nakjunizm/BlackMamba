@@ -11,7 +11,23 @@
 </head>
 <body>
   <app-root></app-root>
-  <top10-chart>Loading...</top10-chart>
-  <event-list class="ui-g"></event-list>
+  <div class="ui-g">
+    <div class="ui-g-12">
+      <md-toolbar color="primary">
+        BlackMamba
+      </md-toolbar>
+    </div>
+    <div class="ui-g-12 ui-g-nopad">
+      <div class="ui-g-12 ui-md-6">
+        <top10-chart>Loading...</top10-chart>
+      </div>
+      <div class="ui-g-12 ui-md-6">
+        <event-list class="ui-g"></event-list>
+      </div>
+    </div>
+    <div class="ui-g-12">
+      <calc></calc>
+    </div>
+  </div>
 </body>
 </html>

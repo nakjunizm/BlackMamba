@@ -14,7 +14,8 @@ export class HttpService {
   getDocsRestful(type:string){
     let _top10Url:string = 'http://localhost:8000/top10/'+type;
     return this._http.get(_top10Url)
-                    .map(res => res.json())
+                    .toPromise()
+                    .then(res => res.json())
                     .catch(this.handleError);
   }
 

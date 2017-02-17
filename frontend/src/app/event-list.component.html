@@ -1,13 +1,3 @@
-<div class="ui-g-4 ui-md-4 ui-lg-4">
-    From Date: <p-calendar [(ngModel)]="dateFrom" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
-</div>
-<div class="ui-g-4 ui-md-4 ui-lg-4">
-    To Date: <p-calendar [(ngModel)]="dateTo" [showIcon]="true" dateFormat="yy-mm-dd"></p-calendar>
-</div>
-<div class="ui-g-2 ui-md-1 ui-lg-2">
-    <button (click)="postAvg()">{{postAvgBtn}}</button>
-</div>
-
 <div class="ui-g-12">
     <p-dataList [value]="reqEvents" [paginator]="true" [rows]="5">
         <header>

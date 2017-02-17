@@ -82,7 +82,7 @@ class SearchDocs:
                     })
 
         result = elasticsearch.helpers.bulk(self.es_client, input_data)
-        logger.DEBUG(result)
+        logger.debug(result)
         return make_response(jsonify('{"message":"ok"}'),200)
 
 
