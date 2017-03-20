@@ -23,5 +23,5 @@ handlers:
         backupCount: 20
  
 root:
-    level: DEBUG
+    level: INFO
     handlers: [console, logfile]
